@@ -28,6 +28,17 @@ namespace ProjectMiniShop.Controllers
         public IActionResult AddProduct(Product product)
         {
             Company company = _company.FirstOrDefault(m=>m.Id==product.Company.Id);
+            if (_products.Count() != 0)
+            {
+                int id = _products.Max(m => m.Id) + 1;
+                product.Id = id;
+
+            }
+            else
+            {
+                product.Id = 0;
+
+            }
             product.Company = company;
             _products.Add(product);
             return View();
@@ -38,7 +49,18 @@ namespace ProjectMiniShop.Controllers
         {
             return View(_products);
         }
-       
+
         #endregion
+        #region Remove
+        
+        public IActionResult DeleteProduct(int id)
+        {
+            Product product=_products.SingleOrDefault(m=>m.Id==id);
+            
+            _products.Remove(product);
+            return RedirectToAction("GetProduct");
+        }
+        #endregion
+       
     }
 }
