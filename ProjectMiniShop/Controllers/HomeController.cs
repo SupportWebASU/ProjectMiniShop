@@ -8,7 +8,7 @@ namespace ProjectMiniShop.Controllers
     {
        
 
-       
+     
         public IActionResult Index()
         {
             return View();
