@@ -36,7 +36,7 @@ namespace ProjectMiniShop.Controllers
             }
             else
             {
-                product.Id = 0;
+                product.Id = 1;
 
             }
             product.Company = company;
@@ -61,6 +61,24 @@ namespace ProjectMiniShop.Controllers
             return RedirectToAction("GetProduct");
         }
         #endregion
-       
+        #region EditProduct
+        public IActionResult EditProduct(int id)
+        {
+            Product product= _products.SingleOrDefault(p=>p.Id==id);
+            return View(product);
+        }
+        [HttpPost]
+        public IActionResult EditProduct(Product model)
+        {
+            Product product = _products.SingleOrDefault(p => p.Id == model.Id);
+            product.EnableSize= model.EnableSize;
+            product.Price= model.Price;
+            product.Description= model.Description;
+            product.Name= model.Name;
+            product.Company= _company.FirstOrDefault(m=>m.Id==model.Company.Id);
+            product.Quantity= model.Quantity;
+            return RedirectToAction("GetProduct");
+        }
+        #endregion
     }
 }
