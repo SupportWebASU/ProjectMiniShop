@@ -6,12 +6,12 @@ namespace ProjectMiniShop.Controllers
     public class DashboardController : Controller
     {
         private static List<Company> _company=new List<Company>();
-        private static List<Product> _products;
+        private static List<Product> _products = new List<Product>();
         public DashboardController()
         {
             _company.Add(new Company { Id=1,Name="Niki" });
             _company.Add(new Company { Id=2,Name="adidas" });
-            _products=new List<Product>();
+            
 
         }
         public IActionResult Index()
@@ -32,6 +32,13 @@ namespace ProjectMiniShop.Controllers
             _products.Add(product);
             return View();
         }
+        #endregion
+        #region GetProduct
+        public IActionResult GetProduct()
+        {
+            return View(_products);
+        }
+       
         #endregion
     }
 }
