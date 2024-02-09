@@ -48,28 +48,34 @@ namespace ProjectMiniShop.Controllers
         
         public IActionResult DeleteProduct(int id)
         {
-            Product product=_products.SingleOrDefault(m=>m.Id==id);
-            
-            _products.Remove(product);
+            Product? product = _db.Products.Find(id);
+            if (product != null)
+            {
+                _db.Products.Remove(product);
+                _db.SaveChanges();
+                return RedirectToAction("GetProduct");
+            }
             return RedirectToAction("GetProduct");
         }
         #endregion
         #region EditProduct
-        public IActionResult EditProduct(int id)
+        public IActionResult EditProduct(int? id)
         {
-            Product product= _products.SingleOrDefault(p=>p.Id==id);
+            Product? product = _db.Products.SingleOrDefault(p => p.Id == id);
             return View(product);
         }
         [HttpPost]
         public IActionResult EditProduct(Product model)
         {
-            Product product = _products.SingleOrDefault(p => p.Id == model.Id);
-            product.EnableSize= model.EnableSize;
-            product.Price= model.Price;
-            product.Description= model.Description;
-            product.Name= model.Name;
-            product.Company= _company.FirstOrDefault(m=>m.Id==model.Company.Id);
-            product.Quantity= model.Quantity;
+            Product? product = _db.Products.SingleOrDefault(p => p.Id == model.Id);
+            product.EnableSize = model.EnableSize;
+            product.Price = model.Price;
+            product.Description = model.Description;
+            product.Name = model.Name;
+            product.CompanyId = model.CompanyId;
+            product.Quantity = model.Quantity;
+            _db.Products.Update(product);
+            _db.SaveChanges();
             return RedirectToAction("GetProduct");
         }
         #endregion
