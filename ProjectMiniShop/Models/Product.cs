@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectMiniShop.Models
 {
@@ -11,6 +12,8 @@ namespace ProjectMiniShop.Models
         public float Price { get; set; }
         public int Quantity { get; set; }
         public bool EnableSize {  get; set; }
+        public int CompanyId { get; set; }
+        [ForeignKey("CompanyId")]
         public Company Company { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace ProjectMiniShop.Data
 
         }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,6 +18,7 @@ namespace ProjectMiniShop.Data
                 new Company { Id = 1, Name = "Niki" },
                 new Company { Id = 2, Name = "adidas" });
         }
+
 
     }
 }
