@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProjectMiniShop.Data;
 using ProjectMiniShop.Models;
 
 namespace ProjectMiniShop.Controllers
@@ -7,11 +9,13 @@ namespace ProjectMiniShop.Controllers
     {
         private static List<Company> _company=new List<Company>();
         private static List<Product> _products = new List<Product>();
-        public DashboardController()
+        private readonly ApplicationDbContext _db;
+
+        public DashboardController(ApplicationDbContext db)
         {
             _company.Add(new Company { Id=1,Name="Niki" });
             _company.Add(new Company { Id=2,Name="adidas" });
-            
+            _db = db;
 
         }
         public IActionResult Index()
@@ -27,27 +31,16 @@ namespace ProjectMiniShop.Controllers
         [HttpPost]
         public IActionResult AddProduct(Product product)
         {
-            Company company = _company.FirstOrDefault(m=>m.Id==product.Company.Id);
-            if (_products.Count() != 0)
-            {
-                int id = _products.Max(m => m.Id) + 1;
-                product.Id = id;
-
-            }
-            else
-            {
-                product.Id = 1;
-
-            }
-            product.Company = company;
-            _products.Add(product);
+            _db.Products.Add(product);
+            _db.SaveChanges();
             return View();
         }
         #endregion
         #region GetProduct
         public IActionResult GetProduct()
         {
-            return View(_products);
+            var product = _db.Products.Include(p => p.Company).ToList();
+            return View(product);
         }
 
         #endregion
