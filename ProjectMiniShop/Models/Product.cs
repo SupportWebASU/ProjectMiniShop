@@ -24,6 +24,7 @@ namespace ProjectMiniShop.Models
 
         [Required]
         [Range(1, 50000, ErrorMessage = "please enter price from 1 to 50000")]
+        [CheckMaxCompanyPrice(30000)]
         public float Price { get; set; }
 
         [Required]
