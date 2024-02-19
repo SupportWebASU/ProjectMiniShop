@@ -31,9 +31,14 @@ namespace ProjectMiniShop.Controllers
         [HttpPost]
         public IActionResult AddProduct(Product product)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(product);
+            }
+            
             _db.Products.Add(product);
             _db.SaveChanges();
-            return View();
+            return RedirectToAction("GetProduct");
         }
         #endregion
         #region GetProduct
@@ -67,6 +72,11 @@ namespace ProjectMiniShop.Controllers
         [HttpPost]
         public IActionResult EditProduct(Product model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             Product? product = _db.Products.SingleOrDefault(p => p.Id == model.Id);
             product.EnableSize = model.EnableSize;
             product.Price = model.Price;
