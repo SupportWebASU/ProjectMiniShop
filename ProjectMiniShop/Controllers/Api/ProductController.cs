@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectMiniShop.Data;
 using ProjectMiniShop.Models;
+using ProjectMiniShop.Models.DTO;
 
 namespace ProjectMiniShop.Controllers.Api
 {
@@ -12,37 +13,73 @@ namespace ProjectMiniShop.Controllers.Api
     {
 
         [HttpGet]
-        public ActionResult<List<Product>> getProduct()
+        [ProducesResponseType(StatusCodes.Status200OK,Type=typeof(List<ProductDTO>))]
+        public IActionResult getProduct()
         {
-            var products = _db.Products.Include(m => m.Company).ToList();
+            var products = _db.Products.Include(m => m.Company).Select(m=>new ProductDTO
+            {
+                Id=m.Id,
+                Name=m.Name,
+                Description=m.Description,
+                Company=m.Company,
+                CompanyId=m.CompanyId,
+                Price=m.Price      
+            }).ToList();
             return Ok(products);
         }
         [HttpGet("{id}")]
-        public ActionResult<Product> getProduct(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult getProduct(int id)
         {
             if (id <= 0)
             {
                 return BadRequest();
             }
-            var products = _db.Products.Include(m => m.Company).SingleOrDefault(m=>m.Id==id);
+            var products = _db.Products.Include(m => m.Company).SingleOrDefault(m => m.Id == id);
+
             if (products == null)
                 return NotFound();
-            return Ok(products);
+            var productDto = new ProductDTO
+            {
+                Name=products.Name,
+                Id=products.Id, 
+                Price=products.Price,
+                Description=products.Description, 
+                Company=products.Company,
+                CompanyId=products.CompanyId,
+            };
+            return Ok(productDto);
         }
         [HttpPost]
-        public IActionResult AddProduct(Product product)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult AddProduct(ProductDTO productDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
+            var product=new Product()
+            {
+                Name=productDto.Name,
+                Price=productDto.Price,
+                Description=productDto.Description,
+                CompanyId=productDto.CompanyId, 
+                EnableSize=false,
+                Quantity=10,
+            };
             _db.Products.Add(product);
             _db.SaveChanges();
             return Ok();
         }
 
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteProduct(int id)
         {
             if (id <= 0)
@@ -58,21 +95,23 @@ namespace ProjectMiniShop.Controllers.Api
             return Ok();
         }
         [HttpPut]
-        public IActionResult UpdateProduct(Product Updatedproduct)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult UpdateProduct(ProductDTO UpdatedproductDto)
         {
-            if (Updatedproduct.Id <= 0 && !ModelState.IsValid)
+            if (UpdatedproductDto.Id <= 0 && !ModelState.IsValid)
             {
                 return BadRequest();
                 
             }
-            var product=_db.Products.Include(m => m.Company).FirstOrDefault(m=>m.Id== Updatedproduct.Id);
+            var product=_db.Products.Include(m => m.Company).FirstOrDefault(m=>m.Id== UpdatedproductDto.Id);
             if (product == null)
                 return NotFound();
-            product.Name = Updatedproduct.Name;
-            product.Description = Updatedproduct.Description;
-            product.Price = Updatedproduct.Price;
-            product.EnableSize = Updatedproduct.EnableSize;
-            product.CompanyId = Updatedproduct.CompanyId;
+            product.Name = UpdatedproductDto.Name;
+            product.Description = UpdatedproductDto.Description;
+            product.Price = UpdatedproductDto.Price;
+            product.CompanyId = UpdatedproductDto.CompanyId;
             _db.SaveChanges();
             return Ok();
         }
