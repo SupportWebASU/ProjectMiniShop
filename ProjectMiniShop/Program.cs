@@ -1,15 +1,20 @@
 using Microsoft.EntityFrameworkCore;
+using ProjectMiniShop;
 using ProjectMiniShop.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 #region matar configuare db
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
+
+
 #endregion
+builder.Services.AddAutoMapper(typeof(MappingConf));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

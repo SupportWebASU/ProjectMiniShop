@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectMiniShop.Data;
@@ -9,14 +10,14 @@ namespace ProjectMiniShop.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController(ApplicationDbContext _db) : ControllerBase
+    public class ProductController(ApplicationDbContext _db,IMapper _Mapper) : ControllerBase
     {
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK,Type=typeof(List<ProductDTO>))]
         public IActionResult getProduct()
         {
-            var products = _db.Products.Include(m => m.Company).Select(m=>new ProductDTO
+            var products = _db.Products.Include(m => m.Company)/*.Select(m=>new ProductDTO
             {
                 Id=m.Id,
                 Name=m.Name,
@@ -24,8 +25,9 @@ namespace ProjectMiniShop.Controllers.Api
                 Company=m.Company,
                 CompanyId=m.CompanyId,
                 Price=m.Price      
-            }).ToList();
-            return Ok(products);
+            })*/.ToList();
+            //return Ok(products);
+            return Ok(_Mapper.Map<List<ProductDTO>>(products));
         }
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
@@ -41,16 +43,17 @@ namespace ProjectMiniShop.Controllers.Api
 
             if (products == null)
                 return NotFound();
-            var productDto = new ProductDTO
-            {
-                Name=products.Name,
-                Id=products.Id, 
-                Price=products.Price,
-                Description=products.Description, 
-                Company=products.Company,
-                CompanyId=products.CompanyId,
-            };
-            return Ok(productDto);
+            //var productDto = new ProductDTO
+            //{
+            //    Name=products.Name,
+            //    Id=products.Id, 
+            //    Price=products.Price,
+            //    Description=products.Description, 
+            //    Company=products.Company,
+            //    CompanyId=products.CompanyId,
+            //};
+
+            return Ok(_Mapper.Map<ProductDTO>(products));
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,15 +64,18 @@ namespace ProjectMiniShop.Controllers.Api
             {
                 return BadRequest();
             }
-            var product=new Product()
-            {
-                Name=productDto.Name,
-                Price=productDto.Price,
-                Description=productDto.Description,
-                CompanyId=productDto.CompanyId, 
-                EnableSize=false,
-                Quantity=10,
-            };
+            //var product=new Product()
+            //{
+            //    Name=productDto.Name,
+            //    Price=productDto.Price,
+            //    Description=productDto.Description,
+            //    CompanyId=productDto.CompanyId, 
+            //    EnableSize=false,
+            //    Quantity=10,
+            //};
+            var product=_Mapper.Map<Product>(productDto);
+            product.EnableSize = false;
+            product.Quantity = 10;
             _db.Products.Add(product);
             _db.SaveChanges();
             return Ok();
@@ -105,13 +111,15 @@ namespace ProjectMiniShop.Controllers.Api
                 return BadRequest();
                 
             }
-            var product=_db.Products.Include(m => m.Company).FirstOrDefault(m=>m.Id== UpdatedproductDto.Id);
-            if (product == null)
-                return NotFound();
-            product.Name = UpdatedproductDto.Name;
-            product.Description = UpdatedproductDto.Description;
-            product.Price = UpdatedproductDto.Price;
-            product.CompanyId = UpdatedproductDto.CompanyId;
+            //var product=_db.Products.Include(m => m.Company).FirstOrDefault(m=>m.Id== UpdatedproductDto.Id);
+            //if (product == null)
+            //    return NotFound();
+            //product.Name = UpdatedproductDto.Name;
+            //product.Description = UpdatedproductDto.Description;
+            //product.Price = UpdatedproductDto.Price;
+            //product.CompanyId = UpdatedproductDto.CompanyId;
+            var product=_Mapper.Map<Product>(UpdatedproductDto);
+            _db.Products.Update(product);
             _db.SaveChanges();
             return Ok();
         }
