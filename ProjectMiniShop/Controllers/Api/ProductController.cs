@@ -118,8 +118,8 @@ namespace ProjectMiniShop.Controllers.Api
             //product.Description = UpdatedproductDto.Description;
             //product.Price = UpdatedproductDto.Price;
             //product.CompanyId = UpdatedproductDto.CompanyId;
-            var product=_Mapper.Map<Product>(UpdatedproductDto);
-            _db.Products.Update(product);
+            var product = new Product();
+             _Mapper.Map<ProductDTO,Product>(UpdatedproductDto,product);
             _db.SaveChanges();
             return Ok();
         }
