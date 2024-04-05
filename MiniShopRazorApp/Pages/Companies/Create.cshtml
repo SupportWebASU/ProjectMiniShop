@@ -1,0 +1,17 @@
+﻿@page
+@model MiniShopRazorApp.Pages.Companies.CreateModel
+@{
+    Layout = "_Layout";
+}
+<h1>Creating new company</h1>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="company.Name" class="control-label"></label>
+        <input asp-for="company.Name" class="form-control" />
+        <span asp-validation-for="company.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

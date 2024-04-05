@@ -1,0 +1,18 @@
+﻿@page
+@model MiniShopRazorApp.Pages.Companies.EditModel
+@{
+    Layout = "_Layout";
+}
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="company.Name" class="control-label"></label>
+        <input asp-for="company.Name" class="form-control" value="@Model.company.Name"/>
+        <span asp-validation-for="company.Name" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="company.Id" value="@Model.company.Id" />
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>

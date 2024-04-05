@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ProjectMiniShop.Models;
 
 namespace ProjectMiniShop.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -11,13 +13,6 @@ namespace ProjectMiniShop.Data
         }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Product> Products { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Company>().HasData(
-                new Company { Id = 1, Name = "Niki" },
-                new Company { Id = 2, Name = "adidas" });
-        }
 
 
     }
