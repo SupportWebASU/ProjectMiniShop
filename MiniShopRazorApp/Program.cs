@@ -10,7 +10,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.Password.RequiredLength = 8; // Minimum password length
+    options.Password.RequireNonAlphanumeric = false; // Require a non-alphanumeric character
+    options.Password.RequireUppercase = false; // Require an uppercase letter
+    options.Password.RequireLowercase = false; // Require a lowercase letter
+    options.Password.RequireDigit = true; // Require a digit
+})
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
