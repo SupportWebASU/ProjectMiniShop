@@ -25,6 +25,7 @@ namespace MiniShopRazorApp.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -33,10 +34,12 @@ namespace MiniShopRazorApp.Areas.Identity.Pages.Account
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
+            RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _roleManager = roleManager;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
@@ -102,6 +105,12 @@ namespace MiniShopRazorApp.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if(!await _roleManager.RoleExistsAsync("Customer"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Customer"));
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("Employee"));
+            }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
