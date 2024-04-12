@@ -19,7 +19,7 @@ namespace ProjectMiniShop.Models
         [Required(ErrorMessage = "description is required")]
         [Length(5, 50)]
         [RegularExpression(@"^[a-zA-Z' '-'\s]{1,40}$",
-   ErrorMessage = "Characters are not allowed.")]
+            ErrorMessage = "Characters are not allowed.")]
         public string Description { get; set; }
 
         [Required]
@@ -32,6 +32,11 @@ namespace ProjectMiniShop.Models
         public int Quantity { get; set; }
 
         public bool EnableSize { get; set; }
+
+        public float OldPrice { get; set; }
+
+        [Required]
+        public string Image {  get; set; }  
         public int CompanyId { get; set; }
         [ForeignKey("CompanyId")]
         public Company? Company { get; set; }
