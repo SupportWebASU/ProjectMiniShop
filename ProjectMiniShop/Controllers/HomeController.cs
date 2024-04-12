@@ -17,7 +17,7 @@ namespace ProjectMiniShop.Controllers
             return View(_db.Products.Include(m=>m.Company).ToList());
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }
