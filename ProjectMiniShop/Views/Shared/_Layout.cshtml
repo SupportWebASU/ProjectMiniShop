@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minishop</title>
+    <title>Minishop - @ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProjectMiniShop.styles.css" asp-append-version="true" />
@@ -71,11 +71,17 @@
                             <a class="dropdown-item" asp-controller="catalog" asp-action="Checkout">Checkout</a>
                         </div>
                     </li>
+                   
                     <li class="nav-item"><a asp-controller="Home" asp-action="About" class="nav-link">About</a></li>
                     <li class="nav-item active"><a href="/blog/" class="nav-link">Blog</a></li>
                     <li class="nav-item"><a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a></li>
                     <li class="nav-item cta cta-colored"><a asp-controller="catalog" asp-action="cart" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
-
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <partial name="_LoginPartial" />
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
