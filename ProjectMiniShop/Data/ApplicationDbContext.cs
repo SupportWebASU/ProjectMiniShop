@@ -14,6 +14,7 @@ namespace ProjectMiniShop.Data
         }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ContactForm> ContactForm { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

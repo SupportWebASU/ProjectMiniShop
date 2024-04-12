@@ -25,6 +25,18 @@ namespace ProjectMiniShop.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult SubmitForm(ContactForm model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Contact", model);
+            }
+            _db.ContactForm.Add(model);
+            return RedirectToAction("Contact");
+
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
