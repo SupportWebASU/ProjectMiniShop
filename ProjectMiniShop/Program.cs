@@ -26,7 +26,11 @@ builder.Services.AddIdentity<AppUser,IdentityRole>(options =>
 
 #endregion
 builder.Services.AddAutoMapper(typeof(MappingConf));
-
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = builder.Configuration["Facebook:AppId"].ToString();
+    options.AppSecret = builder.Configuration["Facebook:AppSecret"].ToString();
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
