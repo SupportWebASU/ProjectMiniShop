@@ -1,20 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectMiniShop.Data;
 using ProjectMiniShop.Models;
+using ProjectMiniShop.Utility;
+using ProjectMiniShop.ViewModel;
 
 namespace ProjectMiniShop.Controllers
 {
+    [Authorize(Roles ="Admin ,Employee")]
     public class DashboardController : Controller
     {
-        private static List<Company> _company=new List<Company>();
-        private static List<Product> _products = new List<Product>();
+      
         private readonly ApplicationDbContext _db;
 
         public DashboardController(ApplicationDbContext db)
         {
-            _company.Add(new Company { Id=1,Name="Niki" });
-            _company.Add(new Company { Id=2,Name="adidas" });
+            
             _db = db;
 
         }
@@ -24,16 +27,35 @@ namespace ProjectMiniShop.Controllers
             return View();
         }
         #region addProduct
+        [Authorize(Roles =RL.RoleAdmin)]
         public IActionResult AddProduct()
         {
-            return View();
+            var product = new ProductViewModel()
+            {
+                companies = _db.Companies.Select(m => new SelectListItem()
+                {
+                    Value = m.Id.ToString(),
+                    Text = m.Name
+                })
+            };
+            return View(product);
         }
         [HttpPost]
+        [Authorize(Roles = RL.RoleAdmin)]
         public IActionResult AddProduct(Product product)
         {
             if (!ModelState.IsValid)
             {
-                return View(product);
+                var product1 = new ProductViewModel()
+                {
+                    Product=product,
+                    companies = _db.Companies.Select(m => new SelectListItem()
+                    {
+                        Value = m.Id.ToString(),
+                        Text = m.Name
+                    })
+                };
+                return View(product1);
             }
             
             _db.Products.Add(product);
@@ -42,6 +64,7 @@ namespace ProjectMiniShop.Controllers
         }
         #endregion
         #region GetProduct
+        [Authorize(Roles = RL.RoleEmployee)]
         public IActionResult GetProduct()
         {
             var product = _db.Products.Include(p => p.Company).ToList();

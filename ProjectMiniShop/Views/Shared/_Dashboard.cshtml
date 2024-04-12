@@ -27,21 +27,27 @@
         <div class="menu-items">
             <ul class="nav-links">
                 <li>
-                    <a asp-action="index">
+                    <a asp-action="index" asp-controller="Dashboard">
                         <i class="uil uil-estate"></i>
                         <span class="link-name">Dahsboard</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-action="AddProduct">
+                    <a asp-action="AddProduct" asp-controller="Dashboard">
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Add Product</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-action="GetProduct">
+                    <a asp-action="GetProduct" asp-controller="Dashboard">
                         <i class="uil uil-chart"></i>
                         <span class="link-name">View Product</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-page="/Companies/ViewCompany">
+                        <i class="uil uil-chart"></i>
+                        <span class="link-name">View Company</span>
                     </a>
                 </li>
                 <li>

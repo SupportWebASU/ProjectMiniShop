@@ -1,19 +1,31 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using ProjectMiniShop;
 using ProjectMiniShop.Data;
+using ProjectMiniShop.Models;
+using ProjectMiniShop.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+builder.Services.AddScoped<IEmailSender, EmailService>();
+
 #region matar configuare db
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
+builder.Services.AddIdentity<AppUser,IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = false;
+    
+    
+}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 
 #endregion
 builder.Services.AddAutoMapper(typeof(MappingConf));
-
 
 var app = builder.Build();
 
@@ -31,9 +43,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseAuthentication();    
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.MapRazorPages();
 app.Run();
